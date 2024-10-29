@@ -8,7 +8,7 @@ namespace EstacionamentoApp.Management
     public class EstacionamentoService : IVeiculoRepository
 
     {
-        private string connectionString = "Server=localhost;Database=teste;User ID=root;Password=25130321;";
+        private string connectionString = "Server=localhost;Database=estacionamento;User ID=root;Password=;";
 
         private decimal valorHora;
         public int Vagas { get; set; }
@@ -24,7 +24,7 @@ namespace EstacionamentoApp.Management
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "SELECT count(placa) as qtde FROM movger WHERE horasaida is null";
+                string query = "SELECT count(placa) as qtde FROM veiculos WHERE horasaida is null";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -62,7 +62,7 @@ namespace EstacionamentoApp.Management
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "SELECT placa, HoraEntrada FROM movger WHERE placa = @placa and HoraSaida is null";
+                string query = "SELECT placa, HoraEntrada FROM veiculos WHERE placa = @placa and HoraSaida is null";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -100,7 +100,7 @@ namespace EstacionamentoApp.Management
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "SELECT placa, HoraEntrada FROM movger WHERE horasaida is null";
+                string query = "SELECT placa, HoraEntrada FROM veiculos WHERE horasaida is null";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -128,7 +128,7 @@ namespace EstacionamentoApp.Management
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "SELECT count(placa) as qtde FROM movger WHERE horasaida is null";
+                string query = "SELECT count(placa) as qtde FROM veiculos WHERE horasaida is null";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();

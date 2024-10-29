@@ -6,13 +6,13 @@ namespace EstacionamentoApp.DataBase
 {
     public class BancoDados
     {
-        private string connectionString = "Server=localhost;Database=teste;User ID=root;Password=25130321;";
+        private string connectionString = "Server=localhost;Database=estacionamento;User ID=root;Password=;";
 
         public void EntradaVeiculo(Veiculo veiculo)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string insertQuery = "INSERT INTO MovGer (Placa, HoraEntrada) " +
+                string insertQuery = "INSERT INTO veiculos (Placa, HoraEntrada) " +
                     "VALUES (@Placa, @HoraEntrada)";
 
                 using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
@@ -27,12 +27,31 @@ namespace EstacionamentoApp.DataBase
             }
         }
 
-        public void SaidaVeiculo(string placa, DateTime horaSaida, double horasEstacionadas, double minutosEstacionados, decimal Valor)
+        public bool ValidarLogin(string username, string password)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "SELECT COUNT(*) FROM usuarios WHERE username = @username AND password = @password";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@username", username);
+                    command.Parameters.AddWithValue("@password", password);
+
+                    connection.Open();
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+                    return count > 0;
+                }
+            }
+        }
+
+
+    public void SaidaVeiculo(string placa, DateTime horaSaida, double horasEstacionadas, double minutosEstacionados, decimal Valor)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 string updateQuery =
-                    "UPDATE MovGer SET HoraSaida = @HoraSaida, PermanenciaHora = @PermanenciaHora, PermanenciaMin = @PermanenciaMin, Valor = @Valor" +
+                    "UPDATE veiculos SET HoraSaida = @HoraSaida, PermanenciaHora = @PermanenciaHora, PermanenciaMin = @PermanenciaMin, Valor = @Valor" +
                     " WHERE Placa = @Placa and HoraSaida is null";
 
                 using (MySqlCommand command = new MySqlCommand(updateQuery, connection))

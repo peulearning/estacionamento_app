@@ -9,36 +9,14 @@ namespace EstacionamentoApp
     public partial class Menu : Form
     {
         private readonly EstacionamentoService _estacionamentoService;
+
         public Menu()
         {
             InitializeComponent();
-            var bancoDados = new BancoDados(); // injeção do repositório
-            int vagas = 0;
-            decimal valor = 0;
 
-            string connectionString = "Server=localhost;Database=teste;User ID=root;Password=25130321;";
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                string query = "SELECT TotalVagas, ValorHora FROM estacionamento";
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    connection.Open();
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            valor = reader.GetDecimal("ValorHora");
-                            vagas = reader.GetInt32("TotalVagas");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Nenhum registro encontrado.");
-                            return;
-                        }
-                    }
-                }
-            }
+            // Defina o valor manualmente
+            int vagas = 10; // Por exemplo, 10 vagas
+            decimal valor = 5.00m; // Por exemplo, R$5,00 por hora
 
             _estacionamentoService = new EstacionamentoService(valor, vagas);
         }
@@ -62,7 +40,6 @@ namespace EstacionamentoApp
         {
             string placa = txtPlaca.Text.Trim();
 
-
             try
             {
                 _estacionamentoService.RemoverVeiculo(placa);
@@ -72,7 +49,6 @@ namespace EstacionamentoApp
             {
                 MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void buttonSair_Click(object sender, EventArgs e)
@@ -91,10 +67,6 @@ namespace EstacionamentoApp
 
             this.Close();
         }
-        private void txtPlaca_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -106,7 +78,6 @@ namespace EstacionamentoApp
             {
                 MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -119,8 +90,12 @@ namespace EstacionamentoApp
             {
                 MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
-    }
 
+        private void txtPlaca_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+    }
 }

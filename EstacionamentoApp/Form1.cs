@@ -1,10 +1,15 @@
+using EstacionamentoApp.Management;
+
 namespace EstacionamentoApp
 {
     public partial class Form1 : Form
     {
+        private readonly AutenticacaoService autenticacaoService; // Inicializei a Variável
+
         public Form1()
         {
             InitializeComponent();
+            autenticacaoService = new AutenticacaoService();  // Chamei o Objeto 
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -24,34 +29,39 @@ namespace EstacionamentoApp
 
         private void buttonEntrar_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if(txtUsuario.Text.Equals("123") && txtSenha.Text.Equals("123"))
-                {
-                    var menu = new Menu();
-                    menu.Show(); 
+            string username = txtUsuario.Text.Trim();
+            string password = txtSenha.Text.Trim();
 
-                    this.Visible = false;
-                    
-                }
-                else
-                {
-                    MessageBox.Show("Usuário ou senha incorretos",
-                                    "Erro!",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-
-                    txtUsuario.Focus();
-                    txtSenha.Text = string.Empty;
-                }
-            }
-            catch (Exception ex) 
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Desculpe.",
-                ex.Message,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+                MessageBox.Show("Por favor, insira o usuário e a senha.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
+
+            bool loginValido = autenticacaoService.Autenticar(username, password);
+
+            if (loginValido)
+            {
+                MessageBox.Show("Login bem-sucedido!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Abrir o Menu principal ou outro formulário
+                Menu menu = new Menu();
+                menu.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Usuário ou senha incorretos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void txtUsuario_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtSenha_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
